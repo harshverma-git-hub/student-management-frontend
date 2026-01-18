@@ -1,0 +1,43 @@
+// src/data/students.js
+
+export const studentsData = [
+  {
+    id: "ST001",
+    name: "Rahul",
+    className: "10",
+    batch: "Java",
+    timeSlot: "5–6 PM",
+    school: "St. John’s School",
+    phone: "9876543210",
+    email: "rahul@gmail.com",
+    address: "Agra, Uttar Pradesh",
+    status: "active",
+    photo: "",
+  },
+  {
+    id: "ST002",
+    name: "Anjali",
+    className: "11",
+    batch: "Java",
+    timeSlot: "6–7 PM",
+    school: "",
+    phone: "",
+    email: "",
+    address: "",
+    status: "active",
+    photo: "",
+  },
+  {
+    id: "ST003",
+    name: "Amit",
+    className: "12",
+    batch: "DSA",
+    timeSlot: "7–8 PM",
+    school: "DAV Public School",
+    phone: "9123456789",
+    email: "amit@gmail.com",
+    address: "Delhi",
+    status: "inactive",
+    photo: "",
+  },
+];

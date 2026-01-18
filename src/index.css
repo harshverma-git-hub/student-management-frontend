@@ -1,0 +1,40 @@
+/* Hide scrollbar but keep scrolling */
+::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+}
+
+html {
+  scrollbar-width: none; /* Firefox */
+}
+
+body {
+  -ms-overflow-style: none; /* IE/Edge */
+}
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.8s ease;
+}
+
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+.dark {
+  background-color: #0f172a;
+  color: #e5e7eb;
+}
+/* LIGHT THEME */
+body[data-theme="light"] {
+  --bg-main: linear-gradient(to bottom right, #4f46e5, #2563eb, #7c3aed);
+  --text-main: #ffffff;
+  --card-bg: rgba(255, 255, 255, 0.15);
+}
+
+/* DARK THEME */
+body[data-theme="dark"] {
+  --bg-main: linear-gradient(to bottom right, #020617, #0f172a, #020617);
+  --text-main: #e5e7eb;
+  --card-bg: rgba(255, 255, 255, 0.08);
+}
