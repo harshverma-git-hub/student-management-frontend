@@ -315,14 +315,15 @@ export default function UploadTests() {
           {/* Download */}
           
          <a
-  href={test.file}
+  href={`${API_BASE}/api/files/view?url=${encodeURIComponent(test.file)}`}
   target="_blank"
   rel="noopener noreferrer"
   className="inline-flex items-center gap-1 text-indigo-600 text-sm font-medium"
 >
   <Download size={14} />
-  Download Question Paper
+  View Question Paper
 </a>
+
 
         </div>
       ))}

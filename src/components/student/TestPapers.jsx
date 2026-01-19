@@ -135,15 +135,15 @@ export default function TestPapers() {
 
               {/* Download */}
               <a
-  href={test.file}
+  href={`${API_BASE}/api/files/view?url=${encodeURIComponent(test.file)}`}
   target="_blank"
   rel="noopener noreferrer"
-  className="inline-flex items-center gap-2 text-blue-600 font-medium hover:underline text-sm"
-  
+  className="inline-flex items-center gap-1 text-indigo-600 text-sm font-medium"
 >
-  <Download size={16} />
-  Download Question Paper
+  <Download size={14} />
+  View Question Paper
 </a>
+
 
             </div>
           );
