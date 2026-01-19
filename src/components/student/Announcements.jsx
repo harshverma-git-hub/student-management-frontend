@@ -138,6 +138,7 @@ export default function Announcements() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 text-indigo-600 font-medium hover:underline"
+                download
               >
                 <FileText size={18} />
                 View Attachment

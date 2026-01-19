@@ -258,6 +258,7 @@ export default function AdminAnnouncements() {
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-indigo-600 font-medium hover:underline"
+                    download
                     >
                       View Attachment
                     </a>

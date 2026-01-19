@@ -316,6 +316,7 @@ export default function UploadTests() {
           
          <a
   href={test.file}
+  download
   target="_blank"
   rel="noopener noreferrer"
   className="inline-flex items-center gap-1 text-indigo-600 text-sm font-medium"
