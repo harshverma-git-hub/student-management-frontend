@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Download } from "lucide-react";
 import api from "../../services/api";
 
-const API_BASE = "http://localhost:5000";
+const BACKEND_BASE = import.meta.env.VITE_API_BASE_URL;
 
 /* ================= HELPERS ================= */
 
@@ -133,18 +133,18 @@ export default function TestPapers() {
                 </div>
               </div>
 
-              {/* Download */}
+              {/* View PDF */}
               <a
-  href={`${API_BASE}/api/files/view?url=${encodeURIComponent(test.file)}`}
-  target="_blank"
-  rel="noopener noreferrer"
-  className="inline-flex items-center gap-1 text-indigo-600 text-sm font-medium"
->
-  <Download size={14} />
-  View Question Paper
-</a>
-
-
+                href={`${BACKEND_BASE}/api/files/view?url=${encodeURIComponent(
+                  test.file
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-indigo-600 text-sm font-medium"
+              >
+                <Download size={14} />
+                View Question Paper
+              </a>
             </div>
           );
         })}

@@ -1,13 +1,8 @@
 import { useEffect, useState } from "react";
-import {
-  BookOpen,
-  FileText,
-  Upload,
-  X,
-} from "lucide-react";
+import { BookOpen, FileText, Upload, X } from "lucide-react";
 import api from "../../services/api";
 
-const API_BASE = "http://localhost:5000";
+const BACKEND_BASE = import.meta.env.VITE_API_BASE_URL;
 
 export default function Homework() {
   const [homework, setHomework] = useState([]);
@@ -45,10 +40,7 @@ export default function Homework() {
       const data = new FormData();
       data.append("file", file);
 
-      await api.post(
-        `/homework/submit/${selected.id}`,
-        data
-      );
+      await api.post(`/homework/submit/${selected.id}`, data);
 
       setFile(null);
       setSelected(null);
@@ -57,14 +49,14 @@ export default function Homework() {
       console.error("Submit homework failed", err);
       alert(
         err.response?.data?.message ||
-        "Failed to submit homework"
+          "Failed to submit homework"
       );
     } finally {
       setSubmitting(false);
     }
   };
 
-  /* ================= STATUS HELPERS ================= */
+  /* ================= STATUS ================= */
   const getStatusBadge = (hw) => {
     if (hw.submitted) {
       return (
@@ -75,15 +67,15 @@ export default function Homework() {
     }
 
     const isLate =
-      hw.dueDate &&
-      new Date() > new Date(hw.dueDate);
+      hw.dueDate && new Date() > new Date(hw.dueDate);
 
     return (
       <span
-        className={`text-xs px-3 py-1 rounded-full ${isLate
+        className={`text-xs px-3 py-1 rounded-full ${
+          isLate
             ? "bg-red-100 text-red-700"
             : "bg-yellow-100 text-yellow-700"
-          }`}
+        }`}
       >
         {isLate ? "Late" : "Pending"}
       </span>
@@ -105,9 +97,7 @@ export default function Homework() {
 
       {/* Loading */}
       {loading && (
-        <p className="text-gray-500">
-          Loading homework...
-        </p>
+        <p className="text-gray-500">Loading homework...</p>
       )}
 
       {/* Empty */}
@@ -125,7 +115,6 @@ export default function Homework() {
             onClick={() => setSelected(hw)}
             className="bg-white rounded-xl shadow p-5 cursor-pointer hover:shadow-lg transition"
           >
-            {/* Header */}
             <div className="flex justify-between items-start">
               <div className="flex items-center gap-2">
                 <BookOpen className="text-indigo-600" />
@@ -136,12 +125,10 @@ export default function Homework() {
               {getStatusBadge(hw)}
             </div>
 
-            {/* Description */}
             <p className="text-sm text-gray-600 line-clamp-2 mt-2">
               {hw.description}
             </p>
 
-            {/* Footer */}
             <div className="mt-4 flex justify-between items-center text-xs text-gray-500">
               <span>📅 Due: {hw.dueDate}</span>
               {hw.file && (
@@ -178,28 +165,27 @@ export default function Homework() {
               {getStatusBadge(selected)}
             </div>
 
-            {/* Meta */}
             <p className="text-sm text-gray-500 mb-4">
               📅 Due Date: {selected.dueDate}
             </p>
 
-            {/* Description */}
             <p className="text-gray-700 mb-6 whitespace-pre-line">
               {selected.description}
             </p>
 
-            {/* Attachment */}
+            {/* Attachment (FIXED) */}
             {selected.file && (
               <a
-                href={selected.file}
+                href={`${BACKEND_BASE}/api/files/view?url=${encodeURIComponent(
+                  selected.file
+                )}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-indigo-600 font-medium mb-6" 
+                className="inline-flex items-center gap-2 text-indigo-600 font-medium mb-6"
               >
                 <FileText size={18} />
                 View Homework File
               </a>
-
             )}
 
             {/* Submit */}
