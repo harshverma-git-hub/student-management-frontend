@@ -134,15 +134,19 @@ export default function TestPapers() {
               </div>
 
               {/* View PDF */}
-              
 
-<a
-  href={`${FILE_BASE}/api/files/view?url=${encodeURIComponent(fileUrl)}`}
-  target="_blank"
-  rel="noopener noreferrer"
->
-  View PDF
-</a>
+
+              {test.file && (
+  <a
+    href={`${FILE_BASE}/api/files/view?url=${encodeURIComponent(test.file)}`}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="text-indigo-600 underline"
+  >
+    View PDF
+  </a>
+)}
+
             </div>
           );
         })}

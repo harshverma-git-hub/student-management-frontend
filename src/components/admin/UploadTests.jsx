@@ -120,13 +120,17 @@ export default function UploadTests() {
           <div key={test.id} className="bg-white p-5 rounded-xl shadow space-y-3">
             <h3 className="font-semibold">{test.title}</h3>
 
-            <a
-  href={`${FILE_BASE}/api/files/view?url=${encodeURIComponent(fileUrl)}`}
-  target="_blank"
-  rel="noopener noreferrer"
->
-  View PDF
-</a>
+            {test.file && (
+  <a
+    href={`${FILE_BASE}/api/files/view?url=${encodeURIComponent(test.file)}`}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="text-indigo-600 underline"
+  >
+    View PDF
+  </a>
+)}
+
 
             <button onClick={() => deleteTest(test.id)} className="text-red-600">
               <Trash2 size={16} />

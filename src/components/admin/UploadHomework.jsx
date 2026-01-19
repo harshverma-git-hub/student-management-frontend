@@ -82,7 +82,7 @@ export default function UploadHomework() {
       console.error("Create homework failed:", err);
       alert(
         err.response?.data?.message ||
-          "Failed to create homework"
+        "Failed to create homework"
       );
     } finally {
       setLoading(false);
@@ -216,13 +216,15 @@ export default function UploadHomework() {
 
                 {h.hasAttachment && (
                   <a
-  href={`${FILE_BASE}/api/files/view?url=${encodeURIComponent(fileUrl)}`}
-  target="_blank"
-  rel="noopener noreferrer"
->
-  View PDF
-</a>
+                    href={`${FILE_BASE}/api/files/view?url=${encodeURIComponent(h.file)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-indigo-600 underline"
+                  >
+                    View PDF
+                  </a>
                 )}
+
               </div>
             ))}
           </div>

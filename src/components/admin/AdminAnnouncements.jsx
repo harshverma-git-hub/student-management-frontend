@@ -125,13 +125,15 @@ export default function AdminAnnouncements() {
 
                 {a.file && (
                   <a
-  href={`${FILE_BASE}/api/files/view?url=${encodeURIComponent(fileUrl)}`}
-  target="_blank"
-  rel="noopener noreferrer"
->
-  View PDF
-</a>
+                    href={`${FILE_BASE}/api/files/view?url=${encodeURIComponent(a.file)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-indigo-600 underline"
+                  >
+                    View PDF
+                  </a>
                 )}
+
               </div>
             ))}
           </div>
