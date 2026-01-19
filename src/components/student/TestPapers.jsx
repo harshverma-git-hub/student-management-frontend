@@ -139,7 +139,7 @@ export default function TestPapers() {
   target="_blank"
   rel="noopener noreferrer"
   className="inline-flex items-center gap-2 text-blue-600 font-medium hover:underline text-sm"
-  download
+  
 >
   <Download size={16} />
   Download Question Paper

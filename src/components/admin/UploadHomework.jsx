@@ -280,7 +280,7 @@ export default function UploadHomework() {
                     href={h.file}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-indigo-600 text-sm" download
+                    className="inline-flex items-center gap-1 text-indigo-600 text-sm" 
                   >
                     <Paperclip size={14} />
                     View File
