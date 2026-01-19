@@ -108,7 +108,7 @@ export default function UploadHomework() {
 
       alert(
         err.response?.data?.message ||
-          "Failed to create homework"
+        "Failed to create homework"
       );
     } finally {
       setLoading(false);
@@ -251,10 +251,9 @@ export default function UploadHomework() {
                 {/* Target */}
                 <span
                   className={`inline-block text-xs px-3 py-1 rounded-full
-                    ${
-                      h.assignmentType === "ALL"
-                        ? "bg-blue-100 text-blue-700"
-                        : h.assignmentType === "BATCH"
+                    ${h.assignmentType === "ALL"
+                      ? "bg-blue-100 text-blue-700"
+                      : h.assignmentType === "BATCH"
                         ? "bg-purple-100 text-purple-700"
                         : "bg-green-100 text-green-700"
                     }`}
@@ -278,14 +277,15 @@ export default function UploadHomework() {
                 {/* Attachment */}
                 {h.hasAttachment && (
                   <a
-                    href={`${API_BASE}/${h.file}`}
+                    href={h.file}
                     target="_blank"
-                    rel="noreferrer"
+                    rel="noopener noreferrer"
                     className="inline-flex items-center gap-1 text-indigo-600 text-sm"
                   >
                     <Paperclip size={14} />
                     View File
                   </a>
+
                 )}
               </div>
             ))}

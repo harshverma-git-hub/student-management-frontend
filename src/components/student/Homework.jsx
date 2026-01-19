@@ -57,7 +57,7 @@ export default function Homework() {
       console.error("Submit homework failed", err);
       alert(
         err.response?.data?.message ||
-          "Failed to submit homework"
+        "Failed to submit homework"
       );
     } finally {
       setSubmitting(false);
@@ -80,11 +80,10 @@ export default function Homework() {
 
     return (
       <span
-        className={`text-xs px-3 py-1 rounded-full ${
-          isLate
+        className={`text-xs px-3 py-1 rounded-full ${isLate
             ? "bg-red-100 text-red-700"
             : "bg-yellow-100 text-yellow-700"
-        }`}
+          }`}
       >
         {isLate ? "Late" : "Pending"}
       </span>
@@ -192,14 +191,15 @@ export default function Homework() {
             {/* Attachment */}
             {selected.file && (
               <a
-                href={`${API_BASE}/${selected.file}`}
+                href={selected.file}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 text-indigo-600 font-medium mb-6"
               >
                 <FileText size={18} />
                 View Homework File
               </a>
+
             )}
 
             {/* Submit */}

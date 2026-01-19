@@ -48,10 +48,10 @@ export default function AdminAnnouncements() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-   if (form.targetType !== "ALL" && !form.targetValue.trim()) {
-  alert("Please provide target value");
-  return;
-}
+    if (form.targetType !== "ALL" && !form.targetValue.trim()) {
+      alert("Please provide target value");
+      return;
+    }
 
     try {
       const data = new FormData();
@@ -79,20 +79,20 @@ export default function AdminAnnouncements() {
 
       loadAnnouncements();
     } catch (err) {
-  console.error("Publish announcement failed:", err);
+      console.error("Publish announcement failed:", err);
 
-  if (err.response?.status === 401) {
-    alert("Session expired. Please login again.");
-    localStorage.removeItem("token");
-    window.location.href = "/login";
-    return;
-  }
+      if (err.response?.status === 401) {
+        alert("Session expired. Please login again.");
+        localStorage.removeItem("token");
+        window.location.href = "/login";
+        return;
+      }
 
-  alert(
-    err.response?.data?.message ||
-    "Failed to publish announcement"
-  );
-}
+      alert(
+        err.response?.data?.message ||
+        "Failed to publish announcement"
+      );
+    }
   };
 
   /* ================= DELETE ANNOUNCEMENT ================= */
@@ -226,10 +226,9 @@ export default function AdminAnnouncements() {
                 <div className="flex flex-wrap gap-2">
                   <span
                     className={`px-3 py-1 text-xs rounded-full font-medium
-                      ${
-                        a.assignmentType === "ALL"
-                          ? "bg-blue-100 text-blue-700"
-                          : a.assignmentType === "BATCH"
+                      ${a.assignmentType === "ALL"
+                        ? "bg-blue-100 text-blue-700"
+                        : a.assignmentType === "BATCH"
                           ? "bg-purple-100 text-purple-700"
                           : "bg-green-100 text-green-700"
                       }`}
@@ -255,13 +254,14 @@ export default function AdminAnnouncements() {
 
                   {a.file && (
                     <a
-                      href={`${API_BASE}/${a.file}`}
+                      href={a.file}
                       target="_blank"
-                      rel="noreferrer"
-                      className="text-indigo-600 font-medium"
+                      rel="noopener noreferrer"
+                      className="text-indigo-600 font-medium hover:underline"
                     >
                       View Attachment
                     </a>
+
                   )}
                 </div>
               </div>

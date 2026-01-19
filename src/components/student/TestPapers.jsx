@@ -135,14 +135,15 @@ export default function TestPapers() {
 
               {/* Download */}
               <a
-                href={`${API_BASE}/${test.file}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-blue-600 font-medium hover:underline text-sm"
-              >
-                <Download size={16} />
-                Download Question Paper
-              </a>
+  href={test.file}
+  target="_blank"
+  rel="noopener noreferrer"
+  className="inline-flex items-center gap-2 text-blue-600 font-medium hover:underline text-sm"
+>
+  <Download size={16} />
+  Download Question Paper
+</a>
+
             </div>
           );
         })}

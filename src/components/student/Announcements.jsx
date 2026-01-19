@@ -134,14 +134,15 @@ export default function Announcements() {
             {/* Attachment */}
             {selected.file && (
               <a
-                href={`${API_BASE}/${selected.file}`}
+                href={selected.file}
                 target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-2 text-indigo-600 font-medium"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-indigo-600 font-medium hover:underline"
               >
                 <FileText size={18} />
                 View Attachment
               </a>
+
             )}
           </div>
         </div>

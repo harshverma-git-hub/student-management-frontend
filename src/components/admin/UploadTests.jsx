@@ -313,15 +313,17 @@ export default function UploadTests() {
           </div>
 
           {/* Download */}
-          <a
-          target="_blank"
-            href={`${API_BASE}/${test.file}`}
-            download
-            className="inline-flex items-center gap-1 text-indigo-600 text-sm font-medium"
-          >
-            <Download size={14} />
-            Download Question Paper
-          </a>
+          
+         <a
+  href={test.file}
+  target="_blank"
+  rel="noopener noreferrer"
+  className="inline-flex items-center gap-1 text-indigo-600 text-sm font-medium"
+>
+  <Download size={14} />
+  Download Question Paper
+</a>
+
         </div>
       ))}
     </div>
