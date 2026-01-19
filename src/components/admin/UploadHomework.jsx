@@ -1,92 +1,66 @@
 import { useEffect, useState } from "react";
-import { Trash2, Paperclip } from "lucide-react";
+import { ClipboardList, Paperclip, Trash2 } from "lucide-react";
 import api from "../../services/api";
 
 const FILE_BASE = import.meta.env.VITE_FILE_BASE_URL;
+
 export default function UploadHomework() {
-  /* ================= FORM STATE ================= */
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [dueDate, setDueDate] = useState("");
-  const [file, setFile] = useState(null);
+  const [homeworks, setHomeworks] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const [assignedTo, setAssignedTo] = useState("ALL");
-  const [batch, setBatch] = useState("");
-  const [studentId, setStudentId] = useState("");
+  const [form, setForm] = useState({
+    title: "",
+    description: "",
+    dueDate: "",
+    targetType: "ALL",
+    targetValue: "",
+    file: null,
+  });
 
-  /* ================= DATA STATE ================= */
-  const [students, setStudents] = useState([]);
-  const [homeworkList, setHomeworkList] = useState([]);
-  const [loading, setLoading] = useState(false);
-
-  /* ================= LOAD DATA ================= */
-  const loadStudents = async () => {
-    const res = await api.get("/students/dropdown");
-    setStudents(res.data);
-  };
-
+  /* ================= FETCH ================= */
   const loadHomework = async () => {
-    const res = await api.get("/homework/admin");
-    setHomeworkList(res.data);
-  };
-
-  useEffect(() => {
-    loadStudents();
-    loadHomework();
-  }, []);
-
-  /* ================= SUBMIT ================= */
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!title || !dueDate) {
-      alert("Title and due date are required");
-      return;
-    }
-
-    if (assignedTo === "BATCH" && !batch) {
-      alert("Please select a batch");
-      return;
-    }
-
-    if (assignedTo === "STUDENT" && !studentId) {
-      alert("Please select a student");
-      return;
-    }
-
     try {
       setLoading(true);
-
-      const data = new FormData();
-      data.append("title", title);
-      data.append("description", description);
-      data.append("dueDate", dueDate);
-      data.append("assignedTo", assignedTo);
-
-      if (assignedTo === "BATCH") data.append("batch", batch);
-      if (assignedTo === "STUDENT") data.append("studentId", studentId);
-      if (file) data.append("file", file);
-
-      await api.post("/homework", data);
-
-      setTitle("");
-      setDescription("");
-      setDueDate("");
-      setFile(null);
-      setAssignedTo("ALL");
-      setBatch("");
-      setStudentId("");
-
-      loadHomework();
+      const res = await api.get("/homework/admin");
+      setHomeworks(res.data);
     } catch (err) {
-      console.error("Create homework failed:", err);
-      alert(
-        err.response?.data?.message ||
-        "Failed to create homework"
-      );
+      console.error(err);
     } finally {
       setLoading(false);
     }
+  };
+
+  useEffect(() => {
+    loadHomework();
+  }, []);
+
+  /* ================= FORM ================= */
+  const handleChange = (e) => {
+    const { name, value, files } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: files ? files[0] : value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const data = new FormData();
+    Object.entries(form).forEach(([key, value]) => {
+      if (value) data.append(key, value);
+    });
+
+    await api.post("/homework", data);
+    setForm({
+      title: "",
+      description: "",
+      dueDate: "",
+      targetType: "ALL",
+      targetValue: "",
+      file: null,
+    });
+    loadHomework();
   };
 
   /* ================= DELETE ================= */
@@ -98,133 +72,120 @@ export default function UploadHomework() {
 
   /* ================= UI ================= */
   return (
-    <div className="p-6 space-y-10 max-w-6xl mx-auto">
-      {/* ================= CREATE ================= */}
-      <div className="bg-white rounded-xl shadow p-6 max-w-3xl">
-        <h2 className="text-2xl font-bold mb-4">
+    <div className="p-6 space-y-12">
+      {/* UPLOAD HOMEWORK */}
+      <div className="bg-white rounded-2xl shadow-md p-6 max-w-4xl">
+        <h2 className="text-2xl font-bold flex items-center gap-2 mb-6">
+          <ClipboardList className="text-indigo-600" />
           Upload Homework
         </h2>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="grid gap-5">
           <input
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="Homework Title"
-            className="input"
+            name="title"
+            value={form.title}
+            onChange={handleChange}
+            required
+            placeholder="Homework title"
+            className="px-4 py-2 border rounded-lg"
           />
 
           <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Homework Description"
-            rows={3}
-            className="input"
+            name="description"
+            value={form.description}
+            onChange={handleChange}
+            required
+            rows={4}
+            placeholder="Homework description..."
+            className="px-4 py-2 border rounded-lg resize-none"
           />
 
-          <input
-            type="date"
-            value={dueDate}
-            onChange={(e) => setDueDate(e.target.value)}
-            className="input"
-          />
+          <div className="grid md:grid-cols-3 gap-4">
+            <input
+              type="date"
+              name="dueDate"
+              value={form.dueDate}
+              onChange={handleChange}
+              required
+              className="px-4 py-2 border rounded-lg"
+            />
 
-          <select
-            value={assignedTo}
-            onChange={(e) => setAssignedTo(e.target.value)}
-            className="input"
-          >
-            <option value="ALL">All Students</option>
-            <option value="BATCH">Specific Batch</option>
-            <option value="STUDENT">Specific Student</option>
-          </select>
-
-          {assignedTo === "BATCH" && (
             <select
-              value={batch}
-              onChange={(e) => setBatch(e.target.value)}
-              className="input"
+              name="targetType"
+              value={form.targetType}
+              onChange={handleChange}
+              className="px-4 py-2 border rounded-lg"
             >
-              <option value="">Select Batch</option>
-              <option value="Java">Java</option>
-              <option value="Python">Python</option>
-              <option value="C++">C++</option>
+              <option value="ALL">All Students</option>
+              <option value="BATCH">Batch</option>
+              <option value="STUDENT">Individual Student</option>
             </select>
-          )}
 
-          {assignedTo === "STUDENT" && (
-            <select
-              value={studentId}
-              onChange={(e) => setStudentId(e.target.value)}
-              className="input"
-            >
-              <option value="">Select Student</option>
-              {students.map((s) => (
-                <option key={s.id} value={s.id}>
-                  {s.name} ({s.studentId}) – {s.batch}
-                </option>
-              ))}
-            </select>
-          )}
+            <input
+              type="file"
+              name="file"
+              accept=".pdf"
+              onChange={handleChange}
+              className="text-sm"
+            />
+          </div>
 
-          <input
-            type="file"
-            accept=".pdf"
-            onChange={(e) => setFile(e.target.files[0])}
-          />
-
-          <button
-            disabled={loading}
-            className="btn-primary"
-          >
-            {loading ? "Uploading..." : "Create Homework"}
+          <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg w-fit">
+            Upload Homework
           </button>
         </form>
       </div>
 
-      {/* ================= HISTORY ================= */}
+      {/* HOMEWORK HISTORY */}
       <div>
-        <h2 className="text-xl font-bold mb-4">
-          Homework History
-        </h2>
+        <h2 className="text-xl font-bold mb-6">Homework History</h2>
 
-        {homeworkList.length === 0 ? (
-          <p className="text-gray-500">
-            No homework created yet.
-          </p>
+        {loading ? (
+          <p className="text-gray-500">Loading homework…</p>
+        ) : homeworks.length === 0 ? (
+          <div className="bg-white p-6 rounded-xl shadow text-gray-500">
+            No homework uploaded yet.
+          </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {homeworkList.map((h) => (
+          <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+            {homeworks.map((h) => (
               <div
                 key={h.id}
-                className="bg-white rounded-xl shadow p-5 space-y-3"
+                className="bg-white p-5 rounded-2xl shadow-sm border flex flex-col justify-between"
               >
-                <div className="flex justify-between">
-                  <h3 className="font-semibold text-lg">
-                    {h.title}
-                  </h3>
-                  <button
-                    onClick={() => deleteHomework(h.id)}
-                    className="text-red-600"
-                  >
-                    <Trash2 size={18} />
-                  </button>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <h3 className="font-semibold">{h.title}</h3>
+                    <button
+                      onClick={() => deleteHomework(h.id)}
+                      className="text-red-500 hover:text-red-700"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
+
+                  <p className="text-sm text-gray-600 line-clamp-3">
+                    {h.description}
+                  </p>
+
+                  <p className="text-xs text-gray-500">
+                    Due: {new Date(h.dueDate).toLocaleDateString()}
+                  </p>
                 </div>
 
-                <span className="text-xs text-gray-500">
-                  📅 Due: {h.dueDate}
-                </span>
-
-                {h.hasAttachment && (
+                {h.file && (
                   <a
-                    href={`${FILE_BASE}/api/files/view?url=${encodeURIComponent(h.file)}`}
+                    href={`${FILE_BASE}/api/files/view?url=${encodeURIComponent(
+                      h.file
+                    )}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-indigo-600 underline"
+                    className="mt-4 inline-flex items-center gap-2 text-indigo-600 font-medium"
                   >
-                    View PDF
+                    <Paperclip size={16} />
+                    View Attachment
                   </a>
                 )}
-
               </div>
             ))}
           </div>

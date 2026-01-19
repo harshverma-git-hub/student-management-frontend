@@ -4,6 +4,20 @@ import api from "../../services/api";
 
 const FILE_BASE = import.meta.env.VITE_FILE_BASE_URL;
 
+/* ================= STATUS HELPERS ================= */
+function getStatus(hw) {
+  if (hw.submitted) return { text: "Submitted", color: "bg-green-100 text-green-700" };
+
+  const isLate = hw.dueDate && new Date() > new Date(hw.dueDate);
+  return {
+    text: isLate ? "Late" : "Pending",
+    color: isLate
+      ? "bg-red-100 text-red-700"
+      : "bg-yellow-100 text-yellow-700",
+  };
+}
+
+/* ================= COMPONENT ================= */
 export default function Homework() {
   const [homework, setHomework] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -11,14 +25,13 @@ export default function Homework() {
   const [file, setFile] = useState(null);
   const [submitting, setSubmitting] = useState(false);
 
-  /* ================= FETCH HOMEWORK ================= */
+  /* ================= FETCH ================= */
   const loadHomework = async () => {
     try {
-      setLoading(true);
       const res = await api.get("/homework/student");
       setHomework(res.data);
     } catch (err) {
-      console.error("Failed to fetch homework", err);
+      console.error("Failed to load homework", err);
     } finally {
       setLoading(false);
     }
@@ -30,10 +43,7 @@ export default function Homework() {
 
   /* ================= SUBMIT ================= */
   const submitHomework = async () => {
-    if (!file) {
-      alert("Please select a file");
-      return;
-    }
+    if (!file) return alert("Please select a file");
 
     try {
       setSubmitting(true);
@@ -46,48 +56,19 @@ export default function Homework() {
       setSelected(null);
       loadHomework();
     } catch (err) {
-      console.error("Submit homework failed", err);
-      alert(
-        err.response?.data?.message ||
-          "Failed to submit homework"
-      );
+      alert("Failed to submit homework");
     } finally {
       setSubmitting(false);
     }
   };
 
-  /* ================= STATUS ================= */
-  const getStatusBadge = (hw) => {
-    if (hw.submitted) {
-      return (
-        <span className="bg-green-100 text-green-700 text-xs px-3 py-1 rounded-full">
-          Submitted
-        </span>
-      );
-    }
-
-    const isLate =
-      hw.dueDate && new Date() > new Date(hw.dueDate);
-
-    return (
-      <span
-        className={`text-xs px-3 py-1 rounded-full ${
-          isLate
-            ? "bg-red-100 text-red-700"
-            : "bg-yellow-100 text-yellow-700"
-        }`}
-      >
-        {isLate ? "Late" : "Pending"}
-      </span>
-    );
-  };
-
   /* ================= UI ================= */
   return (
-    <div className="space-y-6">
+    <div className="p-6 space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-gray-800">
+        <h1 className="text-2xl font-bold flex items-center gap-2">
+          <BookOpen className="text-indigo-600" />
           Homework
         </h1>
         <p className="text-sm text-gray-500">
@@ -97,56 +78,57 @@ export default function Homework() {
 
       {/* Loading */}
       {loading && (
-        <p className="text-gray-500">Loading homework...</p>
+        <div className="bg-white p-6 rounded-xl shadow text-gray-500">
+          Loading homework…
+        </div>
       )}
 
       {/* Empty */}
       {!loading && homework.length === 0 && (
-        <p className="text-gray-500">
-          No homework assigned.
-        </p>
+        <div className="bg-white p-6 rounded-xl shadow text-gray-500">
+          No homework assigned yet.
+        </div>
       )}
 
       {/* Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {homework.map((hw) => (
-          <div
-            key={hw.id}
-            onClick={() => setSelected(hw)}
-            className="bg-white rounded-xl shadow p-5 cursor-pointer hover:shadow-lg transition"
-          >
-            <div className="flex justify-between items-start">
-              <div className="flex items-center gap-2">
-                <BookOpen className="text-indigo-600" />
-                <h2 className="font-semibold text-lg text-gray-800">
-                  {hw.title}
-                </h2>
-              </div>
-              {getStatusBadge(hw)}
-            </div>
+      <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+        {homework.map((hw) => {
+          const status = getStatus(hw);
 
-            <p className="text-sm text-gray-600 line-clamp-2 mt-2">
-              {hw.description}
-            </p>
-
-            <div className="mt-4 flex justify-between items-center text-xs text-gray-500">
-              <span>📅 Due: {hw.dueDate}</span>
-              {hw.file && (
-                <span className="flex items-center gap-1">
-                  <FileText size={14} />
-                  Attachment
+          return (
+            <div
+              key={hw.id}
+              onClick={() => setSelected(hw)}
+              className="bg-white p-5 rounded-2xl shadow-sm border cursor-pointer hover:shadow-md transition"
+            >
+              <div className="flex justify-between items-start mb-2">
+                <h2 className="font-semibold text-lg">{hw.title}</h2>
+                <span
+                  className={`text-xs px-3 py-1 rounded-full ${status.color}`}
+                >
+                  {status.text}
                 </span>
-              )}
+              </div>
+
+              <p className="text-sm text-gray-600 line-clamp-3">
+                {hw.description}
+              </p>
+
+              <div className="mt-4 flex justify-between items-center text-xs text-gray-400">
+                <span>
+                  Due: {new Date(hw.dueDate).toLocaleDateString()}
+                </span>
+                {hw.file && <FileText size={14} />}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* ================= MODAL ================= */}
       {selected && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl shadow-lg max-w-2xl w-full p-6 relative">
-            {/* Close */}
+          <div className="bg-white rounded-2xl shadow-xl max-w-2xl w-full p-6 relative">
             <button
               onClick={() => {
                 setSelected(null);
@@ -157,34 +139,32 @@ export default function Homework() {
               <X size={20} />
             </button>
 
-            {/* Header */}
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold text-gray-800">
-                {selected.title}
-              </h2>
-              {getStatusBadge(selected)}
-            </div>
+            <h2 className="text-xl font-bold mb-2">
+              {selected.title}
+            </h2>
 
-            <p className="text-sm text-gray-500 mb-4">
-              📅 Due Date: {selected.dueDate}
+            <p className="text-xs text-gray-400 mb-4">
+              Due: {new Date(selected.dueDate).toLocaleDateString()}
             </p>
 
             <p className="text-gray-700 mb-6 whitespace-pre-line">
               {selected.description}
             </p>
 
-            {/* Attachment (FIXED) */}
+            {/* View PDF */}
             {selected.file && (
-  <a
-    href={`${FILE_BASE}/api/files/view?url=${encodeURIComponent(selected.file)}`}
-    target="_blank"
-    rel="noopener noreferrer"
-    className="text-indigo-600 underline"
-  >
-    View PDF
-  </a>
-)}
-
+              <a
+                href={`${FILE_BASE}/api/files/view?url=${encodeURIComponent(
+                  selected.file
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-indigo-600 font-medium mb-6"
+              >
+                <FileText size={18} />
+                View Homework File
+              </a>
+            )}
 
             {/* Submit */}
             {!selected.submitted && (
@@ -192,20 +172,16 @@ export default function Homework() {
                 <input
                   type="file"
                   accept=".pdf"
-                  onChange={(e) =>
-                    setFile(e.target.files[0])
-                  }
+                  onChange={(e) => setFile(e.target.files[0])}
                 />
 
                 <button
                   onClick={submitHomework}
                   disabled={submitting}
-                  className="bg-indigo-600 text-white px-6 py-2 rounded-lg inline-flex items-center gap-2"
+                  className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg inline-flex items-center gap-2"
                 >
                   <Upload size={18} />
-                  {submitting
-                    ? "Submitting..."
-                    : "Submit Homework"}
+                  {submitting ? "Submitting…" : "Submit Homework"}
                 </button>
               </div>
             )}

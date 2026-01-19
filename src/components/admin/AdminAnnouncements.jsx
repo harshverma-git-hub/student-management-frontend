@@ -80,60 +80,107 @@ export default function AdminAnnouncements() {
 
   /* ================= UI ================= */
   return (
-    <div className="p-6 space-y-10">
-      {/* CREATE */}
-      <div className="bg-white rounded-xl shadow p-6 max-w-3xl">
-        <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
+    <div className="p-6 space-y-12">
+      {/* CREATE ANNOUNCEMENT */}
+      <div className="bg-white rounded-2xl shadow-md p-6 max-w-4xl">
+        <h2 className="text-2xl font-bold flex items-center gap-2 mb-6">
           <Megaphone className="text-indigo-600" />
-          Post Announcement
+          Post New Announcement
         </h2>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input name="title" value={form.title} onChange={handleChange} required className="input" placeholder="Title" />
-          <textarea name="message" value={form.message} onChange={handleChange} required rows={4} className="input" placeholder="Message" />
+        <form onSubmit={handleSubmit} className="grid gap-5">
+          <input
+            name="title"
+            value={form.title}
+            onChange={handleChange}
+            required
+            placeholder="Announcement title"
+            className="w-full px-4 py-2 border rounded-lg"
+          />
 
-          <select name="targetType" value={form.targetType} onChange={handleChange} className="input">
-            <option value="ALL">All Students</option>
-            <option value="BATCH">Batch</option>
-            <option value="STUDENT">Student</option>
-          </select>
+          <textarea
+            name="message"
+            value={form.message}
+            onChange={handleChange}
+            required
+            rows={4}
+            placeholder="Write announcement message..."
+            className="w-full px-4 py-2 border rounded-lg resize-none"
+          />
 
-          <input type="file" accept=".pdf" name="file" onChange={handleChange} />
+          <div className="grid md:grid-cols-2 gap-4">
+            <select
+              name="targetType"
+              value={form.targetType}
+              onChange={handleChange}
+              className="px-4 py-2 border rounded-lg"
+            >
+              <option value="ALL">All Students</option>
+              <option value="BATCH">Batch</option>
+              <option value="STUDENT">Individual Student</option>
+            </select>
 
-          <button className="btn-primary">Publish</button>
+            <input
+              type="file"
+              accept=".pdf"
+              name="file"
+              onChange={handleChange}
+              className="text-sm"
+            />
+          </div>
+
+          <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg w-fit">
+            Publish Announcement
+          </button>
         </form>
       </div>
 
-      {/* HISTORY */}
+      {/* ANNOUNCEMENT HISTORY */}
       <div>
-        <h2 className="text-xl font-bold mb-4">Announcement History</h2>
+        <h2 className="text-xl font-bold mb-6">Announcement History</h2>
 
         {loading ? (
-          <p>Loading…</p>
+          <p className="text-gray-500">Loading announcements…</p>
+        ) : announcements.length === 0 ? (
+          <div className="text-gray-500 bg-white p-6 rounded-xl shadow">
+            No announcements posted yet.
+          </div>
         ) : (
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
             {announcements.map((a) => (
-              <div key={a.id} className="bg-white p-5 rounded-xl shadow space-y-3">
-                <div className="flex justify-between">
-                  <h3 className="font-semibold">{a.title}</h3>
-                  <button onClick={() => deleteAnnouncement(a.id)} className="text-red-600">
-                    <Trash2 size={16} />
-                  </button>
-                </div>
+              <div
+                key={a.id}
+                className="bg-white p-5 rounded-2xl shadow-sm border flex flex-col justify-between"
+              >
+                <div className="space-y-3">
+                  <div className="flex justify-between items-start">
+                    <h3 className="font-semibold text-lg">{a.title}</h3>
+                    <button
+                      onClick={() => deleteAnnouncement(a.id)}
+                      className="text-red-500 hover:text-red-700"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
 
-                <p className="text-sm text-gray-600 line-clamp-3">{a.message}</p>
+                  <p className="text-sm text-gray-600 line-clamp-4">
+                    {a.message}
+                  </p>
+                </div>
 
                 {a.file && (
                   <a
-                    href={`${FILE_BASE}/api/files/view?url=${encodeURIComponent(a.file)}`}
+                    href={`${FILE_BASE}/api/files/view?url=${encodeURIComponent(
+                      a.file
+                    )}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-indigo-600 underline"
+                    className="mt-4 inline-flex items-center gap-2 text-indigo-600 font-medium"
                   >
-                    View PDF
+                    <Paperclip size={16} />
+                    View Attachment
                   </a>
                 )}
-
               </div>
             ))}
           </div>
