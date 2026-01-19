@@ -176,7 +176,7 @@ export default function Homework() {
             {/* Attachment (FIXED) */}
             {selected.file && (
               <a
-                href={`${BACKEND_BASE}/api/files/view?url=${encodeURIComponent(
+                href={`${BACKEND_BASE}/files/view?url=${encodeURIComponent(
                   selected.file
                 )}`}
                 target="_blank"

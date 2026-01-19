@@ -125,7 +125,7 @@ export default function AdminAnnouncements() {
 
                 {a.file && (
                   <a
-                    href={`${BACKEND_BASE}/api/files/view?url=${encodeURIComponent(a.file)}`}
+                    href={`${BACKEND_BASE}/files/view?url=${encodeURIComponent(a.file)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1 text-indigo-600 text-sm"

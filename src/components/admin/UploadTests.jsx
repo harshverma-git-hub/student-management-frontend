@@ -122,7 +122,7 @@ export default function UploadTests() {
             <h3 className="font-semibold">{test.title}</h3>
 
             <a
-              href={`${BACKEND_BASE}/api/files/view?url=${encodeURIComponent(test.file)}`}
+              href={`${BACKEND_BASE}/files/view?url=${encodeURIComponent(test.file)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-indigo-600 font-medium"

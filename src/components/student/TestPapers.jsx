@@ -135,7 +135,7 @@ export default function TestPapers() {
 
               {/* View PDF */}
               <a
-                href={`${BACKEND_BASE}/api/files/view?url=${encodeURIComponent(
+                href={`${BACKEND_BASE}/files/view?url=${encodeURIComponent(
                   test.file
                 )}`}
                 target="_blank"

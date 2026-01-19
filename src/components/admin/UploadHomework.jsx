@@ -217,7 +217,7 @@ export default function UploadHomework() {
 
                 {h.hasAttachment && (
                   <a
-                    href={`${BACKEND_BASE}/api/files/view?url=${encodeURIComponent(
+                    href={`${BACKEND_BASE}/files/view?url=${encodeURIComponent(
                       h.file
                     )}`}
                     target="_blank"
