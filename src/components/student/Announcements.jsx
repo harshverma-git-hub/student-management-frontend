@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { Megaphone, FileText, X } from "lucide-react";
 import api from "../../services/api";
 
-const BACKEND_BASE = import.meta.env.VITE_API_BASE_URL;
 
+const FILE_BASE = import.meta.env.VITE_FILE_BASE_URL;
 export default function Announcements() {
   const [announcements, setAnnouncements] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -106,16 +106,12 @@ export default function Announcements() {
 
             {selected.file && (
               <a
-                href={`${BACKEND_BASE}/files/view?url=${encodeURIComponent(
-                  selected.file
-                )}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-indigo-600 font-medium hover:underline"
-              >
-                <FileText size={18} />
-                View Attachment
-              </a>
+  href={`${FILE_BASE}/api/files/view?url=${encodeURIComponent(fileUrl)}`}
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  View PDF
+</a>
             )}
           </div>
         </div>

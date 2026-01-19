@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Megaphone, Trash2, Paperclip } from "lucide-react";
 import api from "../../services/api";
 
-const BACKEND_BASE = import.meta.env.VITE_API_BASE_URL;
+const FILE_BASE = import.meta.env.VITE_FILE_BASE_URL;
 
 export default function AdminAnnouncements() {
   const [announcements, setAnnouncements] = useState([]);
@@ -125,14 +125,12 @@ export default function AdminAnnouncements() {
 
                 {a.file && (
                   <a
-                    href={`${BACKEND_BASE}/files/view?url=${encodeURIComponent(a.file)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-indigo-600 text-sm"
-                  >
-                    <Paperclip size={14} />
-                    View Attachment
-                  </a>
+  href={`${FILE_BASE}/api/files/view?url=${encodeURIComponent(fileUrl)}`}
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  View PDF
+</a>
                 )}
               </div>
             ))}

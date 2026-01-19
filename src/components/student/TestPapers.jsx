@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { Download } from "lucide-react";
 import api from "../../services/api";
 
-const BACKEND_BASE = import.meta.env.VITE_API_BASE_URL;
 
+const FILE_BASE = import.meta.env.VITE_FILE_BASE_URL;
 /* ================= HELPERS ================= */
 
 function getStatus(marks, maxMarks) {
@@ -134,17 +134,15 @@ export default function TestPapers() {
               </div>
 
               {/* View PDF */}
-              <a
-                href={`${BACKEND_BASE}/files/view?url=${encodeURIComponent(
-                  test.file
-                )}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-indigo-600 text-sm font-medium"
-              >
-                <Download size={14} />
-                View Question Paper
-              </a>
+              
+
+<a
+  href={`${FILE_BASE}/api/files/view?url=${encodeURIComponent(fileUrl)}`}
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  View PDF
+</a>
             </div>
           );
         })}
